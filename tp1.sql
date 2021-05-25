@@ -177,6 +177,13 @@ SELECT region, COUNT(region)
 	HAVING COUNT(region) = 1;
 
 -- 2 - 8
+-- Monarchy
+SELECT DISTINCT region FROM country 
+	WHERE region NOT IN (
+		SELECT DISTINCT region FROM country
+			WHERE governmentform LIKE '%Monarchy%'
+	)
+	ORDER BY region ASC;
 
 
 
