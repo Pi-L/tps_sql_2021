@@ -69,7 +69,19 @@ SELECT name,
 	WHERE continent = 'Europe'
 	ORDER BY densite DESC;
 
--- 12 
+
+-- 12
+-- RA --
+SELECT name, 
+		lifeexpectancy,
+		(gnp / population)
+	FROM country
+	WHERE NOT lifeexpectancy < 77
+			AND NOT (gnp / population) > 0.01
+	ORDER BY lifeexpectancy DESC;
+
+
+-- 13 
 -- RA --
 SELECT name, 
 		lifeexpectancy,
@@ -80,5 +92,24 @@ SELECT name,
 			)
 	ORDER BY lifeexpectancy DESC;
 
--- 13
+
+-- 14
 -- RA --
+SELECT c.name as countryName, c.code, COUNT(c.name) AS nblanguage
+	FROM countrylanguage AS cl
+	JOIN country AS c 
+		ON c.code = cl.countrycode
+	WHERE isofficial
+			AND cl.percentage < 50.0
+	GROUP BY c.name, c.code
+	ORDER BY nblanguage DESC;
+
+-- 15
+-- RA --
+SELECT c.name as countryName, COUNT(c.name) AS nbOfficialLanguage
+	FROM countrylanguage AS cl
+	JOIN country AS c 
+		ON c.code = cl.countrycode
+	WHERE cl.isofficial
+	GROUP BY c.name
+	ORDER BY nbOfficialLanguage DESC, c.name ASC;
