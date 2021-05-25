@@ -35,5 +35,50 @@ SELECT DISTINCT language FROM countrylanguage WHERE isofficial ORDER BY language
 
 -- 7
 -- RA --
+SELECT countrycode FROM countrylanguage 
+	WHERE language = 'French' 
+		AND isofficial 
+	ORDER BY countrycode ASC;
 
+-- 8
+-- RA --
+SELECT name, indepyear AS independanceYear FROM country
+	WHERE name = 'France';
 
+-- 9
+-- RA -- 
+SELECT name, coalesce(indepyear, 2042) AS independanceYear FROM country
+	WHERE continent = 'Europe'
+	ORDER BY independanceYear ASC;
+
+-- 10
+-- RA --
+SELECT ROW_NUMBER() OVER (ORDER BY population DESC) AS classement,
+		name 
+	FROM city
+	WHERE countrycode = 'FRA' AND population > 100000
+	ORDER BY population DESC;
+
+-- 11
+-- RA --
+SELECT name, 
+		ROUND(population / surfacearea::decimal, 2) AS densite, 
+		ROUND(gnp * 1000000 / population, 2) AS gdppc,
+		lifeexpectancy
+	FROM country
+	WHERE continent = 'Europe'
+	ORDER BY densite DESC;
+
+-- 12 
+-- RA --
+SELECT name, 
+		lifeexpectancy,
+		(gnp / population)
+	FROM country
+	WHERE NOT (lifeexpectancy >= 77
+				OR (gnp / population) < 0.01
+			)
+	ORDER BY lifeexpectancy DESC;
+
+-- 13
+-- RA --
