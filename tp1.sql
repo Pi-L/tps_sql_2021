@@ -158,6 +158,27 @@ SELECT c.name FROM country AS c
 	);
 
 -- 2 - 6
+SELECT c.name, COUNT(c.name) as nb_city_over_1m
+	FROM country AS c
+	JOIN city AS ct
+		ON ct.countrycode = c.code
+	WHERE ct.population > 1000000
+	GROUP BY c.name
+	HAVING COUNT(c.name) >= 2
+	ORDER BY COUNT(c.name) DESC;
+
+-- 2 - 7
+SELECT region, COUNT(region) 
+	FROM (
+		SELECT region FROM country 
+			GROUP BY governmentform, region
+		) AS sub
+	GROUP BY region
+	HAVING COUNT(region) = 1;
+
+-- 2 - 8
+
+
 
 
 
