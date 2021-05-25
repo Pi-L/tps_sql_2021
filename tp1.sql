@@ -146,6 +146,18 @@ SELECT c.name AS country_name, COUNT(c.name) AS nb_official_language
 	ORDER BY nb_official_language DESC;
 
 -- 2 - 5
+SELECT c.name FROM country AS c
+	WHERE c.name NOT IN (
+		SELECT c.name
+			FROM country AS c
+			JOIN countrylanguage AS cl
+				ON cl.countrycode = c.code
+			WHERE cl.isofficial
+			GROUP BY c.name
+			HAVING COUNT(c.name) >= 1
+	);
+
+-- 2 - 6
 
 
 
