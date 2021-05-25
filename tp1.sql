@@ -1,57 +1,53 @@
 
--- 1
+-- 1- 1
 -- RA -- Π name (world.country) σ population > 100000000 (world.country)
 SELECT name FROM country WHERE population > 100000000;
 
--- 2
+-- 1- 2
 -- RA -- Π region (world.country)
 SELECT DISTINCT region as nomRegion FROM country; 
 
--- 3
+-- 1- 3
 -- RA -- Π region ρ(nomRegion/region) (world.country) σ continent = Europe (world.country)
 SELECT DISTINCT region as nomRegion 
 	FROM country 
 	WHERE continent = 'Europe';
 
--- 4
+-- 1- 4
 -- RA -- 
 SELECT * FROM country WHERE region = 'Southern Europe';
 
--- 5
+-- 1- 5
 -- RA -- 
-SELECT capital FROM country 
-	WHERE region = 'Western Europe';
+SELECT capital AS capitalId, data_type AS capitalType FROM country, information_schema.columns
+	WHERE region = 'Western Europe' 
+		AND table_name = 'country' 
+		AND column_name = 'capital';
 
 
--- 5 bis -- my join didn't work :(
--- RA --
-SELECT data_type as capitalType FROM information_schema.columns
-	WHERE table_name = 'country' AND column_name = 'capital';
-
-
--- 6
+-- 1- 6
 -- RA --
 SELECT DISTINCT language FROM countrylanguage WHERE isofficial ORDER BY language ASC;
 
--- 7
+-- 1- 7
 -- RA --
 SELECT countrycode FROM countrylanguage 
 	WHERE language = 'French' 
 		AND isofficial 
 	ORDER BY countrycode ASC;
 
--- 8
+-- 1- 8
 -- RA --
 SELECT name, indepyear AS independanceYear FROM country
 	WHERE name = 'France';
 
--- 9
+-- 1- 9
 -- RA -- 
 SELECT name, coalesce(indepyear, 2042) AS independanceYear FROM country
 	WHERE continent = 'Europe'
 	ORDER BY independanceYear ASC;
 
--- 10
+-- 1- 10
 -- RA --
 SELECT ROW_NUMBER() OVER (ORDER BY population DESC) AS classement,
 		name 
@@ -59,7 +55,7 @@ SELECT ROW_NUMBER() OVER (ORDER BY population DESC) AS classement,
 	WHERE countrycode = 'FRA' AND population > 100000
 	ORDER BY population DESC;
 
--- 11
+-- 1- 11
 -- RA --
 SELECT name, 
 		ROUND(population / surfacearea::decimal, 2) AS densite, 
@@ -70,7 +66,7 @@ SELECT name,
 	ORDER BY densite DESC;
 
 
--- 12
+-- 1- 12
 -- RA --
 SELECT name, 
 		lifeexpectancy,
@@ -81,7 +77,7 @@ SELECT name,
 	ORDER BY lifeexpectancy DESC;
 
 
--- 13 
+-- 1- 13 
 -- RA --
 SELECT name, 
 		lifeexpectancy,
@@ -93,7 +89,7 @@ SELECT name,
 	ORDER BY lifeexpectancy DESC;
 
 
--- 14
+-- 1- 14
 -- RA --
 SELECT c.name as countryName, c.code, COUNT(c.name) AS nblanguage
 	FROM countrylanguage AS cl
@@ -104,7 +100,7 @@ SELECT c.name as countryName, c.code, COUNT(c.name) AS nblanguage
 	GROUP BY c.name, c.code
 	ORDER BY nblanguage DESC;
 
--- 15
+-- 1- 15
 -- RA --
 SELECT c.name as countryName, COUNT(c.name) AS nbOfficialLanguage
 	FROM countrylanguage AS cl
@@ -113,3 +109,42 @@ SELECT c.name as countryName, COUNT(c.name) AS nbOfficialLanguage
 	WHERE cl.isofficial
 	GROUP BY c.name
 	ORDER BY nbOfficialLanguage DESC, c.name ASC;
+
+
+-- 2 - 1
+SELECT c.name AS country_name, ct.name AS city_name, region
+	FROM city AS ct
+	JOIN country AS c 
+		ON ct.id = c.capital
+	WHERE region = 'South America'
+	ORDER BY c.name ASC;
+
+-- 2 - 2
+SELECT c.name AS country_name
+	FROM country AS c
+	JOIN countrylanguage AS cl
+		ON cl.countrycode = c.code
+	WHERE cl.isofficial AND cl.language = 'French'
+	ORDER BY c.name ASC;
+
+-- 2 - 3
+SELECT c.name AS country_name, c.governmentform
+	FROM country AS c
+	JOIN countrylanguage AS cl
+		ON cl.countrycode = c.code
+	WHERE cl.isofficial AND cl.language = 'Spanish' AND c.governmentform = 'Federal Republic'
+	ORDER BY c.name ASC;
+
+-- 2 - 4
+SELECT c.name AS country_name, COUNT(c.name) AS nb_official_language
+	FROM country AS c
+	JOIN countrylanguage AS cl
+		ON cl.countrycode = c.code
+	WHERE cl.isofficial
+	GROUP BY c.name
+	HAVING COUNT(c.name) > 2
+	ORDER BY nb_official_language DESC;
+
+-- 2 - 5
+
+
