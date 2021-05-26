@@ -62,7 +62,7 @@ SELECT name,
 		ROUND(gnp * 1000000 / population, 2) AS gdppc,
 		lifeexpectancy
 	FROM country
-	WHERE continent = 'Europe'
+	WHERE continent = 'Europe' AND population != 0;
 	ORDER BY densite DESC;
 
 
@@ -72,7 +72,8 @@ SELECT name,
 		lifeexpectancy,
 		(gnp / population)
 	FROM country
-	WHERE NOT lifeexpectancy < 77
+	WHERE population != 0 
+			AND NOT lifeexpectancy < 77
 			AND NOT (gnp / population) > 0.01
 	ORDER BY lifeexpectancy DESC;
 

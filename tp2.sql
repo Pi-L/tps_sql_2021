@@ -67,7 +67,7 @@ SELECT c.name AS country_name
 -- 2 - 8
 SELECT c.name AS country_name
 	FROM country AS c
-	RIGHT JOIN countrylanguage AS cl
+	JOIN countrylanguage AS cl
 		ON cl.countrycode = c.code
 
 	WHERE cl.isofficial AND cl.language = 'French'
@@ -120,6 +120,7 @@ SELECT c.name AS country_name, COUNT(cl.language) as nb_languages
 
 
 -- 2 - 13
+EXPLAIN
 SELECT DISTINCT c.region AS region_name
 	FROM country AS c
 	JOIN country AS c1
@@ -127,6 +128,7 @@ SELECT DISTINCT c.region AS region_name
 	WHERE c.code != c1.code AND ABS(c.lifeexpectancy - c1.lifeexpectancy) >= 10;
 
 -- 2 - 14
+EXPLAIN
 SELECT c.name AS country_name, SUM(CASE WHEN cl.language='French' OR cl.language='English' THEN 1
 					ELSE 0 END) AS lesum
 	FROM country AS c
