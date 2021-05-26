@@ -52,9 +52,8 @@ SELECT name FROM OFFICIAL;
 -- 2 - 7
 SELECT c.name AS country_name
 	FROM country AS c
-	RIGHT JOIN countrylanguage AS cl
+	JOIN countrylanguage AS cl
 		ON cl.countrycode = c.code
-
 	WHERE cl.isofficial AND cl.language = 'French'
 INTERSECT
 SELECT c.name AS country_name
@@ -108,5 +107,34 @@ SELECT DISTINCT c.name AS country_name, ct.name AS capital_name, cl.language as 
 	JOIN city AS ct
 		ON ct.id = c.capital
 	WHERE ct.population > 5000000 AND cl.isofficial;
+
+-- 2 - 12
+SELECT c.name AS country_name, COUNT(cl.language) as nb_languages
+	FROM country AS c
+	JOIN countrylanguage AS cl
+		ON cl.countrycode = c.code
+	WHERE cl.percentage > 10
+	GROUP BY c.name
+	HAVING COUNT(c.name) >= 3
+	ORDER BY nb_languages DESC;
+
+
+-- 2 - 13
+SELECT DISTINCT c.region AS region_name
+	FROM country AS c
+	JOIN country AS c1
+		ON c.region = c1.region
+	WHERE c.code != c1.code AND ABS(c.lifeexpectancy - c1.lifeexpectancy) >= 10;
+
+-- 2 - 14
+SELECT c.name AS country_name, SUM(CASE WHEN cl.language='French' OR cl.language='English' THEN 1
+					ELSE 0 END) AS lesum
+	FROM country AS c
+	JOIN countrylanguage AS cl
+		ON cl.countrycode = c.code
+	WHERE cl.isofficial
+	GROUP BY c.name
+	HAVING  SUM(CASE WHEN cl.language='French' OR cl.language='English' THEN 1
+					ELSE 0 END) >= 2;
 
 
