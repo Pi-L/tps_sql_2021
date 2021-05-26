@@ -64,3 +64,14 @@ WITH LANGUAGESPEAKERS (language, max_pop_per_lg) AS
 	
 SELECT language, ROUND(max_pop_per_lg) FROM LANGUAGESPEAKERS
 	JOIN MAXSPEAKERS ON max_pop_per_lg = maxspeakers;
+
+
+-- 3 - 1
+SELECT continent, SUM(population) FROM country
+	GROUP BY continent
+	HAVING SUM(population) > 500000000;
+
+-- 3 - 2
+SELECT governmentform, COUNT(code) FROM country
+	GROUP BY governmentform
+	HAVING COUNT(code) > 10;
