@@ -70,5 +70,5 @@ SELECT SUM(i.measure * i.quantity * i.Percentage_Consumed / 100) AS vol_tot_bier
 	WHERE (i.type LIKE '%biere%'
 			OR i.type LIKE '%bière%')
 			AND i.unit = 'L'
-			AND DATEDIFF(NOW(), c.date) <= 365;
+			AND DATEDIFF(NOW(), c.date) <= 365 AND DATEDIFF(NOW(), c.date) >= 0;
 
