@@ -36,19 +36,17 @@ SELECT sa.id_chouille, sa.date, sa.sum_alcool
 	WHERE sa.sum_alcool = (SELECT MAX(sum_alcool) FROM SUMALCOOL);
 
 -- 3 - Déterminer la personne qui amène le plus de bière en étant hôte(sse) de soirée
-
-WITH HOST (id_person, name) AS (
-		SELECT p.id_person, p.name
+WITH HOST (id_person, id_chouille) AS (
+		SELECT p.id_person, c.id_chouille
 		FROM Person AS p
 		JOIN Location AS l ON l.id_person_host = p.id_person
-		JOIN Chouille AS c ON c.id_location = l.id_location
-		GROUP BY p.id_person),
+		JOIN Chouille AS c ON c.id_location = l.id_location),
 
 	SUMBEERVOL(id_person, vol_tot_biere) AS (
 		SELECT i.id_person, SUM(i.measure * i.quantity * i.Percentage_Consumed / 100) AS vol_tot_biere 
 			FROM Item AS i
 			JOIN HOST AS h 
-				ON h.id_person = i.id_person
+				ON h.id_person = i.id_person AND h.id_chouille = i.id_chouille
 			WHERE i.type LIKE '%biere%'
 					OR i.type LIKE '%bière%'
 					AND i.unit = 'L'
