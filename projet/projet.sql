@@ -1,7 +1,6 @@
 
-
 -- 1 - Déterminer le nombre moyen de personnes par lieu de chouille et recuperer l'adresse pour chaque lieu
-
+-- Person, Location, Chouille
 WITH NBPERSCHOUILLE (id_chouille, id_location, nb_pers_chouille) AS (
 		SELECT c.id_chouille, c.id_location, COUNT(p.id_person) 
 			FROM Person AS p
@@ -11,15 +10,16 @@ WITH NBPERSCHOUILLE (id_chouille, id_location, nb_pers_chouille) AS (
 				ON pc.id_chouille = c.id_chouille
 			GROUP BY c.id_chouille)
 
-SELECT l.id_location, l.adress, AVG(nb_pers_chouille) 
+SELECT l.id_location, l.adress, AVG(nb_pers_chouille) as avg_pers_loc
 	FROM NBPERSCHOUILLE AS nbpc
 	JOIN Location AS l
 		ON nbpc.id_location = l.id_location
-	GROUP BY l.id_location;
+	GROUP BY l.id_location
+	ORDER BY avg_pers_loc DESC;
 
 
-
--- 2 - Déterminer la chouille où le volume maximum d’alcool a été consommé
+-- 2 - Déterminer la chouille où le volume (Litre) maximum d’alcool a été consommé
+-- Item, Chouille
 WITH SUMALCOOL (id_chouille, date, sum_alcool) AS (
 		SELECT c.id_chouille, c.date, SUM(i.measure * i.quantity * i.Percentage_Consumed / 100) as sum_alcool 
 			FROM Chouille AS c
@@ -31,12 +31,13 @@ WITH SUMALCOOL (id_chouille, date, sum_alcool) AS (
 					AND i.unit = 'L'
 			GROUP BY c.id_chouille)
 	
-
 SELECT sa.id_chouille, sa.date, sa.sum_alcool
 	FROM SUMALCOOL AS sa
 	WHERE sa.sum_alcool = (SELECT MAX(sum_alcool) FROM SUMALCOOL);
 
+
 -- 3 - Déterminer la personne qui amène le plus de bière en étant hôte(sse) de soirée
+-- Person, Location, Item, Chouille
 WITH HOST (id_person, id_chouille) AS (
 		SELECT p.id_person, c.id_chouille
 		FROM Person AS p
@@ -53,13 +54,14 @@ WITH HOST (id_person, id_chouille) AS (
 					AND i.unit = 'L'
 			GROUP BY i.id_person)
 
-SELECT p.name, sb.vol_tot_biere FROM Person AS p
+SELECT p.id_person, p.name, sb.vol_tot_biere FROM Person AS p
 	JOIN SUMBEERVOL AS sb
 		ON sb.id_person = p.id_person
 	WHERE sb.vol_tot_biere = (SELECT MAX(vol_tot_biere) FROM SUMBEERVOL);
 
 
 -- 4 - Déterminer le volume total de bière consommée durant l’année passée durant toutes les Chouille
+-- Chouille, Item
 SELECT SUM(i.measure * i.quantity * i.Percentage_Consumed / 100) AS vol_tot_biere 
 	FROM Item AS i
 	JOIN Chouille AS c 
