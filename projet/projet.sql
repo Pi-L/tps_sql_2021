@@ -50,17 +50,12 @@ WITH HOST (id_person, id_chouille) AS (
 			WHERE i.type LIKE '%biere%'
 					OR i.type LIKE '%bière%'
 					AND i.unit = 'L'
-			GROUP BY i.id_person),
+			GROUP BY i.id_person)
 
-	MAXBEER (id_person, max_vol_tot_biere) AS (
-		SELECT id_person, MAX(vol_tot_biere) AS max_vol_tot_biere 
-			FROM SUMBEERVOL
-			GROUP BY id_person
-	)
-
-SELECT p.name, mb.max_vol_tot_biere FROM Person AS p
-	JOIN MAXBEER AS mb
-		ON mb.id_person = p.id_person;
+SELECT p.name, sb.vol_tot_biere FROM Person AS p
+	JOIN SUMBEERVOL AS sb
+		ON sb.id_person = p.id_person
+	WHERE sb.vol_tot_biere = (SELECT MAX(vol_tot_biere) FROM SUMBEERVOL);
 
 
 -- 4 - Déterminer le volume total de bière consommée durant l’année passée durant toutes les Chouille
