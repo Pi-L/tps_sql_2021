@@ -1,6 +1,7 @@
 
 
 -- 1 - Déterminer le nombre moyen de personnes par lieu de chouille et recuperer l'adresse pour chaque lieu
+
 WITH NBPERSCHOUILLE (id_chouille, id_location, nb_pers_chouille) AS (
 		SELECT c.id_chouille, c.id_location, COUNT(p.id_person) 
 			FROM Person AS p
@@ -10,7 +11,7 @@ WITH NBPERSCHOUILLE (id_chouille, id_location, nb_pers_chouille) AS (
 				ON pc.id_chouille = c.id_chouille
 			GROUP BY c.id_chouille)
 
-SELECT l.adress, AVG(nb_pers_chouille) 
+SELECT l.id_location, l.adress, AVG(nb_pers_chouille) 
 	FROM NBPERSCHOUILLE AS nbpc
 	JOIN Location AS l
 		ON nbpc.id_location = l.id_location
