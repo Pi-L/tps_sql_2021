@@ -64,7 +64,8 @@ SELECT p.name, mb.max_vol_tot_biere FROM Person AS p
 
 
 -- 4 - Déterminer le volume total de bière consommée durant l’année passée durant toutes les Chouille
-SELECT SUM(i.measure * i.quantity * i.Percentage_Consumed / 100) AS vol_tot_biere FROM Item AS i
+SELECT SUM(i.measure * i.quantity * i.Percentage_Consumed / 100) AS vol_tot_biere 
+	FROM Item AS i
 	JOIN Chouille AS c 
 		ON c.id_chouille = i.id_chouille
 	WHERE (i.type LIKE '%biere%'
