@@ -29,10 +29,11 @@ WITH SUMALCOOL (id_chouille, date, sum_alcool) AS (
 					OR i.type LIKE '%rhum%'
 					AND i.unit = 'L'
 			GROUP BY c.id_chouille)
+	
 
-SELECT id_chouille, date, MAX(sum_alcool)
-	FROM SUMALCOOL
-	GROUP BY id_chouille;
+SELECT sa.id_chouille, sa.date, sa.sum_alcool
+	FROM SUMALCOOL AS sa
+	WHERE sa.sum_alcool = (SELECT MAX(sum_alcool) FROM SUMALCOOL);
 
 -- 3 - Déterminer la personne qui amène le plus de bière en étant hôte(sse) de soirée
 
