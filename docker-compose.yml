@@ -13,8 +13,8 @@ services:
             - ./db_data:/var/lib/mysql
         ports:
             - '33060:3306'
-    pgadmin:
-        container_name: <pgadmin_container_name>
+    phpmyadmin:
+        container_name: <phpmyadmin_container_name>
         image: phpmyadmin/phpmyadmin:latest
         restart: always
         ports:
