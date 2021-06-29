@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+    db:
+        container_name: <db_container_name>
+        image: mysql:latest
+        restart: always
+        environment:
+            - MYSQL_ROOT_PASSWORD=<root_password>
+            - MYSQL_DATABASE=<db_name>
+            - MYSQL_USER=<user>
+            - MYSQL_PASSWORD=<password>
+        volumes:
+            - ./db_data:/var/lib/mysql
+        ports:
+            - '33060:3306'
+    pgadmin:
+        container_name: <pgadmin_container_name>
+        image: phpmyadmin/phpmyadmin:latest
+        restart: always
+        ports:
+            - '7777:80'
+        environment:
+            - PMA_HOST=db
+            - MYSQL_ROOT_PASSWORD=<root_password>
+            - MYSQL_USER=<user>
+            - MYSQL_PASSWORD=<password>
+        depends_on:
+            - db
